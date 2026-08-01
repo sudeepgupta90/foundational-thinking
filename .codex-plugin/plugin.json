@@ -1,0 +1,22 @@
+{
+  "name": "foundational-thinking",
+  "version": "0.1.0",
+  "description": "Socratic inquiry and Scholastic disputation, codified as agent skills for critical thinking and decision-making",
+  "author": {
+    "name": "sudeepgupta90",
+    "email": "sudeepgupta90@gmail.com"
+  },
+  "homepage": "https://github.com/sudeepgupta90/foundational-thinking",
+  "repository": "https://github.com/sudeepgupta90/foundational-thinking",
+  "license": "MIT",
+  "keywords": [
+    "socratic",
+    "dialectic",
+    "disputation",
+    "critical-thinking",
+    "reasoning",
+    "decision-making",
+    "skills"
+  ],
+  "skills": "./skills/"
+}

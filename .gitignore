@@ -1,0 +1,10 @@
+# Local Claude Code state — machine-specific, never shared
+.claude/settings.local.json
+
+# OS cruft
+.DS_Store
+
+# Run records — scenarios, baselines, verification and discovery runs.
+# Deliberately unpublished: they state each scenario's expected behavior, and an agent
+# that can read them is no longer an unaided one. See Provenance in README.md.
+tests/
