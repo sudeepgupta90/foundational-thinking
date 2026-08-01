@@ -12,7 +12,7 @@ halves of the thinking problem: how to take a confidently-held but ill-formed be
 (Scholastic). This repo codifies the underlying principles once, in
 [`principles/`](principles/), and derives from them two short, loadable agent skills in
 [`skills/`](skills/). The principles are the stable substrate; the skill wording is tuned
-empirically against recorded agent behavior — see [Provenance](#provenance) below.
+empirically against agent behavior during development.
 
 ## The two skills
 
@@ -149,30 +149,6 @@ Two things worth stating, because both are easy to assume and neither is true. N
 there to be read by people. And a plugin's root `CLAUDE.md` is *not* loaded as context by a
 Claude Code install, so `GEMINI.md` is the only one of the three that a runtime picks up on
 its own.
-
-## Provenance
-
-The skill wording in `skills/` is not a paraphrase of the principles documents. It was
-derived empirically. Each scenario was first run against a fresh agent with **no skill
-loaded**, and the failure it actually produced was recorded. Skill content exists only
-where such a run showed a real failure — guidance without a demonstrated failure is
-treated as bloat rather than added. Three of the eight baseline scenarios showed no failure
-and therefore contributed nothing to either skill. A fourth, socratic-01, passed on
-substance but asked its clarifying question *after* committing to work; that ordering
-defect is the only thing it contributed.
-
-The skills were then re-run against *fresh* scenarios — not the baseline ones — against
-no-skill controls, which is where one leak took two attempts to close. A third set of runs
-covers the separate question of whether a skill *fires* at all, since the `description`
-field is the whole trigger; it caught a routing bug where a decision between two named
-options was being claimed by the wrong skill.
-
-Results that contradicted the authors' predictions are recorded alongside the ones that
-confirmed them.
-
-**The run records are not published with this repo.** They state each scenario's expected
-behavior, and an agent that can read them is no longer the unaided agent every one of these
-measurements depends on.
 
 ## License
 
