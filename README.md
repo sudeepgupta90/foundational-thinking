@@ -54,6 +54,26 @@ term when there is no choice on the table. See [`principles/README.md`](principl
 for the full routing logic and how the methods chain (`ill-formed question → Socratic →
 well-formed question → Scholastic → determination`).
 
+## Invocation
+
+Both skills can still be triggered the way any skill is — the agent reads the `description`
+in its skill listing and decides whether to invoke it. Claude Code installs additionally get
+two more paths, so invocation doesn't depend solely on the model noticing the skill applies:
+
+- **`using-foundational-thinking`** ([`skills/using-foundational-thinking/SKILL.md`](skills/using-foundational-thinking/SKILL.md))
+  — a meta-skill that a `SessionStart` hook ([`hooks/`](hooks/)) force-injects once per
+  session (on startup, `/clear`, or compaction). It instructs the agent, in compulsory
+  language, to check whether `socratic-inquiry` or `scholastic-disputation` applies before
+  responding — raising the odds of automatic triggering without injecting either skill's
+  full body into every prompt.
+- **`/socratic-inquiry [claim]`** and **`/scholastic-disputation [options]`**
+  ([`commands/`](commands/)) — slash commands that invoke the corresponding skill directly,
+  independent of the model's judgment. Use these when you want a guaranteed manual trigger.
+
+This mechanism is Claude Code-specific (`SessionStart` hooks and slash commands aren't part
+of the Gemini or Codex manifests in this repo); on those runtimes, invocation is
+description-driven only.
+
 ## Install
 
 The remote-URL forms below assume the repo is published at
@@ -123,9 +143,13 @@ skills with the same `name` in front of the same agent.
 
 ```
 .
-├── skills/                         the two loadable skills — self-contained
+├── skills/                         the loadable skills — self-contained
 │   ├── socratic-inquiry/           SKILL.md + references/
-│   └── scholastic-disputation/     SKILL.md + references/
+│   ├── scholastic-disputation/     SKILL.md + references/
+│   └── using-foundational-thinking/ meta-skill, force-injected by hooks/session-start
+│
+├── hooks/                          Claude Code SessionStart hook (injects the meta-skill)
+├── commands/                       Claude Code slash commands for manual invocation
 │
 ├── principles/                     sources, arguments, failure modes
 │   ├── README.md                   which method when, and how the two chain
