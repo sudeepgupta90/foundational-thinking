@@ -39,20 +39,9 @@ Produces *aporia* — a better question, with its terms defined. See
 > defended later, or when you are about to give a verdict without having stated the losing
 > case.
 
-Constructive: builds a defensible position by stating the strongest opposing case first,
-then deciding. Produces *determinatio* — a decision that survived its objections. See
-[`principles/scholastic-disputation.md`](principles/scholastic-disputation.md) and
-[`skills/scholastic-disputation/SKILL.md`](skills/scholastic-disputation/SKILL.md).
+Constructive: builds a defensible position by stating the strongest opposing case first, then deciding. Produces *determinatio* — a decision that survived its objections. See [`principles/scholastic-disputation.md`](principles/scholastic-disputation.md) and [`skills/scholastic-disputation/SKILL.md`](skills/scholastic-disputation/SKILL.md).
 
-The two are not interchangeable: running disputation on a question whose terms are still
-equivocal produces a rigorously-argued wrong answer. The one case that needs a stated rule
-is the overlap — *"we need a more maintainable state layer, Redux or Zustand?"* has both an
-undefined quality word and a named choice. **A choice between named options goes to
-disputation even when the criteria are vague**; the *distinguo* is where the equivocal term
-gets split, so the method has somewhere to put it. Socratic inquiry is for the undefined
-term when there is no choice on the table. See [`principles/README.md`](principles/README.md)
-for the full routing logic and how the methods chain (`ill-formed question → Socratic →
-well-formed question → Scholastic → determination`).
+The two are not interchangeable: running disputation on a question whose terms are still equivocal produces a rigorously-argued wrong answer. The one case that needs a stated rule is the overlap — *"we need a more maintainable state layer, Redux or Zustand?"* has both an undefined quality word and a named choice. **A choice between named options goes to disputation even when the criteria are vague**; the *distinguo* is where the equivocal term gets split, so the method has somewhere to put it. Socratic inquiry is for the undefined term when there is no choice on the table. See [`principles/README.md`](principles/README.md) for the full routing logic and how the methods chain (`ill-formed question → Socratic → well-formed question → Scholastic → determination`).
 
 ## Invocation
 
@@ -70,30 +59,27 @@ two more paths, so invocation doesn't depend solely on the model noticing the sk
   ([`commands/`](commands/)) — slash commands that invoke the corresponding skill directly,
   independent of the model's judgment. Use these when you want a guaranteed manual trigger.
 
-This mechanism is Claude Code-specific (`SessionStart` hooks and slash commands aren't part
-of the Gemini or Codex manifests in this repo); on those runtimes, invocation is
-description-driven only.
+This mechanism is Claude Code-specific (`SessionStart` hooks and slash commands aren't part of the Gemini or Codex manifests in this repo); on those runtimes, invocation is description-driven only.
 
 ## Install
 
-The remote-URL forms below assume the repo is published at
-`github.com/sudeepgupta90/foundational-thinking`; until then, use the local-path or manual
-routes. Whether the skills are *discovered* inside a live installed session — as opposed to
-inside a simulated harness, which is where discovery was tested — is untested on all three
-runtimes. The manual copy is the route with the fewest moving parts if a plugin install
-does not surface both skills.
+Skill discovery was tested in a simulated harness, not a live installed session, on all three runtimes. If a plugin install doesn't surface both skills, fall back to the [manual copy](#manual-copy), which has the fewest moving parts.
 
 ### Claude Code (plugin)
 
-From this repo's directory:
-
 ```
-/plugin marketplace add /path/to/foundational-thinking
-/plugin install foundational-thinking
+/plugin marketplace add sudeepgupta90/foundational-thinking
+/plugin install foundational-thinking@foundational-thinking
 ```
 
-Or point `/plugin marketplace add` at the GitHub repo once published
-(`sudeepgupta90/foundational-thinking`).
+The first command registers this repo as a marketplace; the second installs the plugin from it (`plugin@marketplace`, both named `foundational-thinking`). Start a new session afterwards so the `SessionStart` hook fires.
+
+To install from a local clone instead (e.g. while hacking on the skills), clone the repo, then run this from inside it:
+
+```
+/plugin marketplace add .
+/plugin install foundational-thinking@foundational-thinking
+```
 
 ### Gemini CLI (extension)
 
@@ -103,15 +89,9 @@ Or point `/plugin marketplace add` at the GitHub repo once published
 gemini extensions install https://github.com/sudeepgupta90/foundational-thinking
 ```
 
-[`GEMINI.md`](GEMINI.md) is declared as the extension's `contextFileName`, so the two skill
-descriptions are in context from session start and the bodies load on demand. That file is
-loaded in whatever directory the session starts in, which is not where the skills are, so
-it names `skills/` and `principles/README.md` relative to the extension's install directory
-(`~/.gemini/extensions/foundational-thinking/`) rather than linking to them.
+[`GEMINI.md`](GEMINI.md) is declared as the extension's `contextFileName`, so the two skill descriptions are in context from session start and the bodies load on demand. That file is loaded in whatever directory the session starts in, which is not where the skills are, so it names `skills/` and `principles/README.md` relative to the extension's install directory (`~/.gemini/extensions/foundational-thinking/`) rather than linking to them.
 
-The manifest declares no skills path — unlike the Codex one — on the expectation that
-Gemini CLI discovers `skills/` from the extension root by itself. That has not been
-verified against a live install. If both skills do not show up, use the manual copy below.
+The manifest declares no skills path — unlike the Codex one — on the expectation that Gemini CLI discovers `skills/` from the extension root by itself. That has not been verified against a live install. If both skills do not show up, use the manual copy below.
 
 ### Codex (plugin)
 
@@ -120,24 +100,27 @@ which is what a Codex plugin needs to expose both skills.
 
 **Use the manual copy below.** The only marketplace manifest in this repo is
 [`.claude-plugin/marketplace.json`](.claude-plugin/marketplace.json), which is Claude Code's;
-there is no equivalent under `.codex-plugin/`, so a `/plugin marketplace add` pointed at
-this repo has nothing to resolve from Codex. The plugin manifest is shipped so that the repo
-is ready to be listed once a Codex marketplace source exists, but no Codex install path has
-been verified here.
+there is no equivalent under `.codex-plugin/`, so a `/plugin marketplace add` pointed at this repo has nothing to resolve from Codex. The plugin manifest is shipped so that the repo is ready to be listed once a Codex marketplace source exists, but no Codex install path has been verified here.
 
 ### Manual copy
 
 Any runtime that reads skills from a directory can use these without the plugin machinery.
-Copy or symlink both skill directories into wherever that runtime looks — `~/.claude/skills/`,
-`~/.codex/skills/`, or the cross-runtime `~/.agents/skills/`:
+Clone the repo, then copy or symlink both skill directories into wherever that runtime
+looks — `~/.claude/skills/`, `~/.codex/skills/`, or the cross-runtime `~/.agents/skills/`.
+From the repo root, for Codex:
 
 ```
+git clone https://github.com/sudeepgupta90/foundational-thinking
+cd foundational-thinking
+mkdir -p ~/.codex/skills
 ln -s "$PWD/skills/socratic-inquiry"       ~/.codex/skills/socratic-inquiry
 ln -s "$PWD/skills/scholastic-disputation" ~/.codex/skills/scholastic-disputation
 ```
 
-Install by exactly one route per runtime. A manual copy alongside a plugin install puts two
-skills with the same `name` in front of the same agent.
+Swap `~/.codex/skills` for the directory your runtime uses. The meta-skill
+`using-foundational-thinking` is only useful with the Claude Code hook, so it is deliberately left out here.
+
+Install by exactly one route per runtime. A manual copy alongside a plugin install puts two skills with the same `name` in front of the same agent.
 
 ## Repo layout
 
@@ -168,11 +151,7 @@ skills with the same `name` in front of the same agent.
 └── LICENSE
 ```
 
-Two things worth stating, because both are easy to assume and neither is true. Nothing in
-`skills/` links into `principles/` — the skills are self-contained, and the principles are
-there to be read by people. And a plugin's root `CLAUDE.md` is *not* loaded as context by a
-Claude Code install, so `GEMINI.md` is the only one of the three that a runtime picks up on
-its own.
+Two things worth stating, because both are easy to assume and neither is true. Nothing in `skills/` links into `principles/` — the skills are self-contained, and the principles are there to be read by people. And a plugin's root `CLAUDE.md` is *not* loaded as context by a Claude Code install, so `GEMINI.md` is the only one of the three that a runtime picks up on its own.
 
 ## License
 
